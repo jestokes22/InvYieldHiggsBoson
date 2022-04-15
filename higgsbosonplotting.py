@@ -44,3 +44,39 @@ plt.ylabel('Probability')
 plt.title(r'$\mathrm{Histogram \ and\ fit,\ where:}\ \mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
 
 plt.show()
+
+# allPt now includes all the transverse momenta
+allPt = pd.concat([data.pt1, data.pt2]) 
+
+# concat-command from the pandas module combines (concatenates) the information to a single column
+# (it returns here a DataFrame -type variable, but it only has a singe unnamed column, so later
+# we don't have to choose the wanted column from the allPt variable)
+
+
+# And the histogram
+plt.hist(allPt, bins=400, range = (0,50))
+plt.xlabel('$p_t$ (GeV)', fontsize = 12)
+plt.ylabel('Amount', fontsize = 12)
+plt.title('Histogram of transverse momenta', fontsize = 15)
+
+plt.show()
+
+# Momenta limit between 0 and 10
+# using the below cond, we only choose the events below that amount (pt < cond)
+cond = 10
+
+smallPt = data[(data.pt1 < cond) & (data.pt2 < cond)]
+
+# Let's save all the etas and pts to variables
+allpPt = pd.concat([smallPt.pt1, smallPt.pt2])
+allEta = pd.concat([smallPt.eta1, smallPt.eta2])
+
+# and draw a scatterplot
+
+plt.scatter(allEta, allpPt, s=1)
+
+plt.ylabel('$p_t$ (GeV)', fontsize=13)
+plt.xlabel('Pseudorapidity ($\eta$)', fontsize=13)
+plt.title('Tranverse momenta vs. pseudorapidity', fontsize=15)
+
+plt.show()

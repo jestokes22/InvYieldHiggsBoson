@@ -14,9 +14,9 @@ try:
 except (http.client.IncompleteRead) as e:
     data = e.partial
     
-#iMass = data['M']
+#iMass = data.loc['M']
 # And save the invariant masses to iMass
-iMass = data[:,'M']
+iMass = data.loc[:,'M']
 
 # Plus draw the histogram
 n, bins, patches = plt.hist(iMass, 300, facecolor='g')

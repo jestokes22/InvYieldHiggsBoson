@@ -5,12 +5,18 @@ import pandas as pd
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
+import http.client
 
-# Let's choose Dimuon_DoubleMu.csv 
-data = pd.read_csv('http://opendata.cern.ch/record/545/files/Dimuon_DoubleMu.csv')
 
+urls = 'http://opendata.cern.ch/record/545/files/Dimuon_DoubleMu.csv'
+try:
+    data = pd.read_csv(urls)
+except (http.client.IncompleteRead) as e:
+    data = e.partial
+    
+#iMass = data['M']
 # And save the invariant masses to iMass
-iMass = data['M']
+iMass = data[:,'M']
 
 # Plus draw the histogram
 n, bins, patches = plt.hist(iMass, 300, facecolor='g')
@@ -31,7 +37,7 @@ croMass = iMass[(min < iMass) & (iMass < max)]
 (mu, sigma) = norm.fit(croMass)
 
 # Histogram of the cropped data. Note that the data is normalized (density = 1)
-n, bins, patches = plt.hist(croMass, 300, density = 1, facecolor='g')
+n, bins, patches = plt.hist(croMass, 300,density = 1,facecolor='g')
 
 #mlab.normpdf calculates the normal distribution's y-value with given µ and sigma
 # let's also draw the distribution to the same image with histogram
@@ -39,11 +45,12 @@ y = norm.pdf(bins, mu, sigma)
 l = plt.plot(bins, y, 'r-.', linewidth=3)
 
 
-plt.xlabel('Invarian Mass(GeV)')
+plt.xlabel('Invariant Mass(GeV)')
 plt.ylabel('Probability')
 plt.title(r'$\mathrm{Histogram \ and\ fit,\ where:}\ \mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
 
 plt.show()
+
 
 # allPt now includes all the transverse momenta
 allPt = pd.concat([data.pt1, data.pt2]) 
